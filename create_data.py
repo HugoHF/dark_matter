@@ -2,11 +2,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 import argparse
 
-def generate_data(num_points=100, time_interval=10, mass=1, density=1, c=1, h_bar=1, mean=0, derivation=0.3, g_e=1, use_noise=True):
-
-    domain = np.array([i for i in range(num_points)]) / time_interval
-
-    noise = np.random.normal(mean, derivation, num_points)
+def generate_data(time_interval=0.01, total_time=1, mass=1, density=1, c=1, h_bar=1, mean=0, derivation=0.3, g_e=1, use_noise=True):
+    num_points = int(total_time / time_interval)
+    domain = np.arange(0, total_time, time_interval)
 
     if mass == 0:
         factor = np.sqrt(2*density / (c*c)) * h_bar / (c*c)
@@ -14,13 +12,13 @@ def generate_data(num_points=100, time_interval=10, mass=1, density=1, c=1, h_ba
         factor = np.sqrt(2*density / (c*c)) * h_bar / (c*c* mass)
 
     phi = np.array([factor * np.cos(mass * c*c * t / h_bar) for t in domain])
-
     phi *= g_e
 
-    if use_noise: phi += noise
+    if use_noise: 
+        noise = np.random.normal(mean, derivation, num_points)
+        phi += noise
 
     return(phi)
-
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Generate sample data.')
