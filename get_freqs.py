@@ -1,9 +1,9 @@
 def get_freqs(signal, dt, threshold):
     """
-    Returns the most significant frequencies found in noisy signal. 
+    Returns the most significant frequencies found in noisy signal.
     Using the data from create_data.py, the threshold needs to be low (~0.001) because of the amplitude factor.
     For normal trigonometric functions, the threshold can be higher (~100).
-    
+
     Parameters:
     -----------
         signal: np.array
@@ -12,7 +12,7 @@ def get_freqs(signal, dt, threshold):
             Interval between each point of the domain
         threshold: int
             Magnitude threshold to get rid of noise frequencies
-            
+
     Output:
     -------
         frequencies: np.array
@@ -28,5 +28,5 @@ def get_freqs(signal, dt, threshold):
     for i in L:
         if psd[i] >= threshold:
             freqs.append(i)
-            
+
     return np.array(freqs)
