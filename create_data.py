@@ -1,24 +1,25 @@
 import numpy as np
-import matplotlib.pyplot as plt
 import argparse
 
-def generate_data(total_time=1, time_interval=0.01, mass=1, density=1, c=1, h_bar=1, mean=0, derivation=0.3, g_e=1, use_noise=True):
+def generate_data(total_time=1, time_interval=0.001, m_phi=1, theta=1, c_gamma=1, alpha=1, v=1, density=1,
+                    c=1, h_bar=1, mean=0, deviation=0.001, use_noise=True):
+                    
     domain = np.arange(0, total_time, time_interval)
     num_points = len(domain)
+    
+    K       = np.sqrt((2 * density) / c**2)
+    omega   = ((m_phi * (c**2)) / h_bar)
 
-    if mass == 0:
-        factor = np.sqrt(2*density / (c*c)) * h_bar / (c*c)
-    else:
-        factor = np.sqrt(2*density / (c*c)) * h_bar / (c*c* mass)
+    first   = ((np.sin(theta) / v) - ((2 * c_gamma * (alpha ** 2) * np.sin(theta)) / (np.pi * v)))
+    func    = lambda t: first * ((K / omega) * np.cos(omega * t) ** 2)
 
-    phi = np.array([factor * np.cos(mass * c*c * t / h_bar) for t in domain])
-    phi *= g_e
+    data    = np.array([func(j) for j in domain])
 
     if use_noise:
-        noise = np.random.normal(mean, derivation, num_points)
-        phi += noise
+        noise = np.random.normal(mean, deviation, num_points)
+        data += noise
 
-    return(phi)
+    return data
 
 
 
