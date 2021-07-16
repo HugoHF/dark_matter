@@ -19,7 +19,8 @@ def generate_data(total_time=1, time_interval=0.001, m_phi=1, theta=1, c_gamma=1
         noise = np.random.normal(mean, deviation, num_points)
         data += noise
 
-    return data
+    result = np.array([domain,data])
+    return result
 
 
 
