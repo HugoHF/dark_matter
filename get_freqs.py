@@ -1,5 +1,5 @@
 import numpy as np
-from scipy import fft
+from scipy.fft import fft
 
 def get_freqs(signal, dt, threshold):
     """
