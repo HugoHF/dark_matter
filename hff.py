@@ -24,7 +24,7 @@ def get_fft(signal, dt):
             Spectrum magnitude
     """
     n         = len(signal[0])
-    noisy_fft = rfft(signal[1])
+    noisy_fft = rfft(signal[1]**2)        # this method only works with positive amplitudes
     freq      = rfftfreq(n, dt)
     mag       = np.abs(noisy_fft) * 2 / n # multiply by two since we removed the second half of spectrum and energy must be conserved
                                           # divide by n to normalize

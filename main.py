@@ -11,10 +11,10 @@ import matplotlib.pyplot as plt
 total_time    = 1           # Generating signal
 time_interval = 0.001       # Generating signal
 m_phi         = 2 * np.pi   # Generating signal
-theta         = 1           # Generating signal
-c_gamma       = 1           # Generating signal
+m_e           = 1           # Generating signal
+g_gamma       = 1           # Generating signal
+g_e           = 1           # Generating signal
 alpha         = 1           # Generating signal
-v             = 1           # Generating signal
 density       = 1           # Generating signal
 c             = 1           # Generating signal
 h_bar         = 1           # Generating signal
@@ -35,7 +35,7 @@ method = 2                  # Run method 1 or 2
 ##---------------------------##
 ##---- GENERATING SIGNAL ----##
 ##---------------------------##
-signal = create_data(total_time=total_time, time_interval=time_interval, m_phi=m_phi, theta=theta, c_gamma=c_gamma, alpha=alpha, v=v, density=density,
+signal = create_data(total_time=total_time, time_interval=time_interval, m_phi=m_phi, m_e=m_e, g_gamma=g_gamma, g_e=g_e, alpha=alpha, density=density,
                     c=c, h_bar=h_bar, mean=mean, deviation=deviation, use_noise=use_noise)
 
 plt.plot(signal[0], signal[1])

@@ -1,19 +1,19 @@
 import numpy as np
 import argparse
 
-def create_data(total_time=1, time_interval=0.001, m_phi=1, theta=1, c_gamma=1, alpha=1, v=1, density=1,
+def create_data(total_time=1, time_interval=0.001, m_phi=1, m_e=1, g_gamma=1, g_e=1, alpha=1, density=1,
                     c=1, h_bar=1, mean=0, deviation=0.001, use_noise=True):
 
-    domain = np.arange(0, total_time, time_interval)
+    domain     = np.arange(0, total_time, time_interval)
     num_points = len(domain)
 
-    K       = np.sqrt((2 * density) / c**2)
-    omega   = ((m_phi * (c**2)) / h_bar)
+    K     = np.sqrt((2 * density) / c**2)
+    omega = ((m_phi * (c**2)) / h_bar)
 
-    first   = ((np.sin(theta) / v) - ((2 * c_gamma * (alpha ** 2) * np.sin(theta)) / (np.pi * v)))
-    func    = lambda t: first * ((K / omega) * np.cos(omega * t) ** 2)
+    first = (g_e / m_e) + (2 * alpha * g_gamma)
+    func  = lambda t: first * ((K / omega) * np.cos(omega * t))
 
-    data    = np.array([func(j) for j in domain])
+    data  = np.array([func(t) for t in domain])
 
     if use_noise:
         noise = np.random.normal(mean, deviation, num_points)
@@ -21,8 +21,6 @@ def create_data(total_time=1, time_interval=0.001, m_phi=1, theta=1, c_gamma=1, 
 
     result = np.array([domain,data])
     return result
-
-
 
 if __name__ == "__main__":
     '''total_time=1, time_interval=0.001, m_phi=1, theta=1, c_gamma=1, alpha=1, v=1, density=1,

@@ -21,8 +21,8 @@ def get_freqs(signal, threshold):
         freqs: np.array
             Array with most significant frequencise found
     """
-    domain, signal = signal
-    signal
+    _, signal = signal
+    
     n    = len(signal)
     fhat = fft(signal)                               # get noisy fast fourier transform
     psd  = fhat * np.conj(fhat) / n                  # get power spectrum density
