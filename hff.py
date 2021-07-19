@@ -102,6 +102,6 @@ def get_hff(signal, dt):
             Frequency with the most significance found
     """
 
-    mag, domain = get_fft(np.array(signal), dt)
-    ampl, freq = get_freq_ampl(domain, mag)
+    domain, mag = get_fft(np.array(signal), dt)
+    ampl, freq  = get_freq_ampl(domain, mag)
     return ampl, freq
