@@ -1,6 +1,12 @@
 # Measuring significance
 Running some tests, I found out a relationship between the first peak of the Fourier transform, i.e. the peak we ignore for further processing, and the detected most significant peak. The relationship is: `first peak / significant peak = 2`.
 
+For clarity, the peaks that we are comparing are the first two in the graph below.
+![Figure 1](./significance/figure_1.png)
+
+We are comparing the first peak at frequency 0, and the most significant one from the rest of the graph, which in this case is at frequency 15. From the graph above it may not be clear than the former is twice the latter. But this is because we are using a logarithmic scale for the y axis. Zooming in reveals more detailed information about the y axis and this way we can see that `first peak / significant peak = 2`. 
+![Figure 2](./significance/figure_2.png)
+
 I ran the code below, varying `density` between 0.001 and 0.1 with 0.001 intervals, to test the relation holds with small amplitudes, as this is the type of data we expect from experiments. I also tested it by varying the same variable between 1 and 100, 500 and 600 to make sure the relation holds with bigger amplitudes.
 
 The edge case I found was when `m_phi = np.pi`, in which case also the HFF function breaks down and detects 250 as the most significant frequency. There is also an error when `m_phi = 0`, however, this happens because this value for `m_phi` provokes division by zero when creating the data. (Note that no noise is being introduced for this test.)
