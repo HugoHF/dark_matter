@@ -1,7 +1,7 @@
 # Measuring significance
-Running some tests, I found out a relationship between the first peak of the Fourier transform, i.e. the peak we ignore for further, and the detected most significant peak. The relationship is: `first peak / significant peak = 2`.
+Running some tests, I found out a relationship between the first peak of the Fourier transform, i.e. the peak we ignore for further processing, and the detected most significant peak. The relationship is: `first peak / significant peak = 2`.
 
-Varying `density` between 0.001 and 0.1 with 0.001 intervals to test the relation holds with small amplitudes, as this is the type of data we expect from experiments. I also tested it by varying the same variable between 1 and 100, 500 and 600 to make sure the relation holds with biger amplitudes.
+I ran the code below, varying `density` between 0.001 and 0.1 with 0.001 intervals, to test the relation holds with small amplitudes, as this is the type of data we expect from experiments. I also tested it by varying the same variable between 1 and 100, 500 and 600 to make sure the relation holds with bigger amplitudes.
 
 The edge case I found was when `m_phi = np.pi`, in which case also the HFF function breaks down and detects 250 as the most significant frequency. There is also an error when `m_phi = 0`, however, this happens because this value for `m_phi` provokes division by zero when creating the data. (Note that no noise is being introduced for this test.)
 
@@ -34,9 +34,9 @@ for i in np.arange(f_start, f_end, f_inter):
 Running this, we get 2 (or something like 2.0000000000000004 and 1.9999999999999996) every time. Therefore, it is safe to assume that the proportion is equal to 2 when there is no noise in the signal.
 
 ## Defining the significance function
-To define the significance function, I used the fact that ideally (without noise), `first peak / significant peak = 2`. Taking this as a base, we can define the cost function as `((first peak / significant peak) / 2) - 1`. The first term checks the proportion of `first peak / significant peak` from the noisy data with the ideal one. Then, I subtract one to make the value when there is no noise equal to 0 and therefore the function is centered around 0. 
+To define the significance function, I used the fact that ideally (without noise), `first peak / significant peak = 2`. Taking this as a base, we can define the cost function as `((first peak / significant peak) / 2) - 1`. The first term checks the value of `first peak / significant peak`, which should be (very close) to 1 in a signal without noise. Then, I subtract one to make the value when there is no noise equal to 0 and therefore make the significance function centered around 0. 
 
-To test the function, I created data with different frequencies (2 through) and noise deviations to see how well the function represents the significance of the frequency. The code to get the results presented below is the same as the above but with the last line replaced with:
+To test the function, I created data with different frequencies (2 through 9) and different noise deviations to see how well the function represents the significance of the frequency. The code to get the results presented below is the same as the above but with the last line replaced with the following two lines:
 ```python
 significance = get_significance(ran, freq)
 print(f'Calculated significance of frequency {freq}: {significance}')
@@ -101,6 +101,6 @@ Calculated significance of frequency 7: 2.280011903258249
 Calculated significance of frequency 379: 3.563642622026796
 Calculated significance of frequency 136: 3.325993519002677
 ```
-Remember that the detected frequencies should be 2 through 9. In the results above, when HFF was able to detect the correct frequency, the significance is below 3 except for frequency 6. The value for frequency 6 can vary with each run of the algorithm since the noise generated is random. But what reamins the same all of the time is that a wrongly detected frequency has a significance greater than or equal to three. 
+Remember that the detected frequencies should be 2 through 9. In the results above, when HFF was able to detect the correct frequency, the significance is below 3 except for frequency 6. The value for frequency 6 can vary with each run of the algorithm since the noise generated is random. But what remains the same all of the time is that a wrongly detected frequency has a significance greater than or equal to 3. 
 
 Therefore, I think that for starters we can assume that a significance below 3 means that the frequency was correctly detected. And the closer to 0 the more confident we are about this. 
