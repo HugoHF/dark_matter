@@ -2,16 +2,19 @@ import numpy as np
 import argparse
 
 def create_data(total_time=1, time_interval=0.001, m_phi=1, m_e=1, g_gamma=1, g_e=1, alpha=1, density=1,
-                    c=1, h_bar=1, mean=0, deviation=0.001, use_noise=True):
+                    c=1, h_bar=1, mean=0, deviation=0.001, use_noise=True, simple=False, A=1, omega=1):
 
     domain     = np.arange(0, total_time, time_interval)
     num_points = len(domain)
 
-    K     = np.sqrt((2 * density) / c**2)
-    omega = ((m_phi * (c**2)) / h_bar)
+    if simple:
+        func = lambda t: A * np.cos(omega * t)
+    else:
+        K     = np.sqrt((2 * density) / c**2)
+        omega = ((m_phi * (c**2)) / h_bar)
 
-    first = (g_e / m_e) + (2 * alpha * g_gamma)
-    func  = lambda t: first * ((K / omega) * np.cos(omega * t))
+        first = (g_e / m_e) + (2 * alpha * g_gamma)
+        func  = lambda t: first * ((K / omega) * np.cos(omega * t))
 
     data  = np.array([func(t) for t in domain])
 
@@ -26,7 +29,7 @@ if __name__ == "__main__":
     '''total_time=1, time_interval=0.001, m_phi=1, theta=1, c_gamma=1, alpha=1, v=1, density=1,
     c=1, h_bar=1, mean=0, deviation=0.001, use_noise=True
     '''
-    parser = argparse.ArgumentParser(description='Generate sample data.')
+    parser = argparse.ArgumentParser(description='Generate sample data. DEPRECATED')
     parser.add_argument('-total_time', metavar='t', type=float, help='timespan of signal, default: 1', default=1)
     parser.add_argument('-time_interval', metavar='dt', type=float, help='time interval between points, default: 0.001', default=0.001)
     parser.add_argument('-mass', metavar='m_phi', type=float, help='mass of dark matter particles, default: 1 \n(make it 0 for no oscillation)', default=1)
@@ -43,5 +46,5 @@ if __name__ == "__main__":
     parser.add_argument('-no_noise', action='store_true', default=False, help='toggle noise')
     args = parser.parse_args()
 
-    phi = create_data(total_time=args.total_time, time_interval=args.time_interval, m_phi=args.mass, theta=args.theta, density=args.density, c=args.c, c_gamma=args.c_gamma, alpha=args.alpha, v=args.v, h_bar=args.h_bar, mean=args.mean, deviation=args.deviation, use_noise=(not args.no_noise))
+    phi = create_data(total_time=args.total_time, time_interval=args.time_interval, m_phi=args.mass,  density=args.density, c=args.c, c_gamma=args.c_gamma, alpha=args.alpha, v=args.v, h_bar=args.h_bar, mean=args.mean, deviation=args.deviation, use_noise=(not args.no_noise))
     print(phi)
