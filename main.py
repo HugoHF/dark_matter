@@ -2,6 +2,7 @@ from create_data import create_data
 from get_freqs import get_freqs
 from autocorrelation import autocorrelation
 from hff import get_hff, get_fft
+from significance import get_significance
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -78,11 +79,13 @@ if method == 1:
 elif method == 2:
     ampl, freq = get_hff(signal, time_interval)
 
-    print(f'Estimated amplitude: {ampl}')
     print(f'Estimated frequency: {freq}')   
 
     dom, ran = get_fft(signal, time_interval) # get domain and range for FT used in HFF 
-    
+
+    significance = get_significance(ran, freq)
+    print(f'Significance of frequency {freq}: {significance}')
+
     fig, ax = plt.subplots(1)
     ax.plot(dom, ran)
     ax.plot(freq, ran[freq], 'bD')            # plot blue square corresponding to most significant frequency peak
