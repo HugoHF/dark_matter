@@ -4,7 +4,7 @@ Running some tests, I found out a relationship between the first peak of the Fou
 For clarity, the peaks that we are comparing are the first two in the graph below.
 ![Figure 1](./significance/figure_1.png)
 
-We are comparing the first peak at frequency 0, and the most significant one from the rest of the graph, which in this case is at frequency 15. From the graph above it may not be clear than the former is twice the latter. But this is because we are using a logarithmic scale for the y axis. Zooming in reveals more detailed information about the y axis and this way we can see that `first peak / significant peak = 2`. 
+We are comparing the first peak at frequency 0, and the most significant one from the rest of the graph, which in this case is at frequency 15. From the graph above it may not be clear than the former is twice the latter. But this is because we are using a logarithmic scale for the y axis. Zooming in reveals more detailed information about the y axis and this way we can see that `first peak / significant peak = 2`.
 ![Figure 2](./significance/figure_2.png)
 
 I ran the code below, varying `density` between 0.001 and 0.1 with 0.001 intervals, to test the relation holds with small amplitudes, as this is the type of data we expect from experiments. I also tested it by varying the same variable between 1 and 100, 500 and 600 to make sure the relation holds with bigger amplitudes.
@@ -24,14 +24,14 @@ f_start = 2
 f_end   = 10
 f_inter = 1
 
-time_interval = 0.001 
+time_interval = 0.001
 total_time    = 1
 deviation     = 0
 
 for i in np.arange(f_start, f_end, f_inter):
     for j in np.arange(d_start, d_end, d_inter):
         signal = create_data(m_phi = i * np.pi, density = j, use_noise=False, deviation=deviation, time_interval=time_interval, total_time=total_time)
-        ampl, freq = get_hff(signal, time_interval) 
+        ampl, freq = get_hff(signal, time_interval)
         dom, ran = get_fft(signal, time_interval)
         significance = get_significance(ran, freq)
         print(ran[0] / ran[freq])
@@ -40,7 +40,7 @@ for i in np.arange(f_start, f_end, f_inter):
 Running this, we get 2 (or something like 2.0000000000000004 and 1.9999999999999996) every time. Therefore, it is safe to assume that the proportion is equal to 2 when there is no noise in the signal.
 
 ## Defining the significance function
-To define the significance function, I used the fact that ideally (without noise), `first peak / significant peak = 2`. Taking this as a base, we can define the cost function as `((first peak / significant peak) / 2) - 1`. The first term checks the value of `first peak / significant peak`, which should be (very close) to 1 in a signal without noise. Then, I subtract one to make the value when there is no noise equal to 0 and therefore make the significance function centered around 0. 
+To define the significance function, I used the fact that ideally (without noise), `first peak / significant peak = 2`. Taking this as a base, we can define the cost function as `((first peak / significant peak) / 2) - 1`. The first term checks the value of `first peak / significant peak`, which should be (very close) to 2 in a signal without noise. Then, I subtract one to make the value when there is no noise equal to 0 and therefore make the significance function centered around 0.
 
 To test the function, I created data with different frequencies (2 through 9) and different noise deviations to see how well the function represents the significance of the frequency. The code to get the results presented below is the same as the above but with the last line replaced with the following two lines:
 ```python
@@ -107,6 +107,6 @@ Calculated significance of frequency 7: 2.280011903258249
 Calculated significance of frequency 379: 3.563642622026796
 Calculated significance of frequency 136: 3.325993519002677
 ```
-Remember that the detected frequencies should be 2 through 9. In the results above, when HFF was able to detect the correct frequency, the significance is below 3 except for frequency 6. The value for frequency 6 can vary with each run of the algorithm since the noise generated is random. But what remains the same all of the time is that a wrongly detected frequency has a significance greater than or equal to 3. 
+Remember that the detected frequencies should be 2 through 9. In the results above, when HFF was able to detect the correct frequency, the significance is below 3 except for frequency 6. The value for frequency 6 can vary with each run of the algorithm since the noise generated is random. But what remains the same all of the time is that a wrongly detected frequency has a significance greater than or equal to 3.
 
-Therefore, I think that for starters we can assume that a significance below 3 means that the frequency was correctly detected. And the closer to 0 the more confident we are about this. 
+Therefore, I think that for starters we can assume that a significance below 3 means that the frequency was correctly detected. And the closer to 0 the more confident we are about this.

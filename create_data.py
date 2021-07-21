@@ -25,6 +25,8 @@ def create_data(total_time=1, time_interval=0.001, m_phi=1, m_e=1, g_gamma=1, g_
     result = np.array([domain,data])
     return result
 
+
+
 if __name__ == "__main__":
     '''total_time=1, time_interval=0.001, m_phi=1, theta=1, c_gamma=1, alpha=1, v=1, density=1,
     c=1, h_bar=1, mean=0, deviation=0.001, use_noise=True
