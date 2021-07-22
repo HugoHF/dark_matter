@@ -3,32 +3,68 @@
 # Mathieu Mezache, Marc Hoffmann, Human Rezaei, Marie Doumic. Testing for high frequency features in a noisy signal. 2019. ffhal-02263522v2f
 
 import numpy as np
-from scipy.fft import rfft, rfftfreq
+from numpy import linalg as LA
 
-def get_fft(signal, dt):
+def get_fft(y, dt):
     """
     Computes the Fourier transform of a data signal. Only the first, real, half of the FT is computed and further manipulated.
 
     Parameters:
     -----------
-        signal: np.array
-            Signal in the following format: [domain, values]
+        y: np.array
+            Array with the value of the points in the signal
         dt: int
             Interval between each sampling point
 
     Output:
     -------
-        freq: np.array
+        rfreqs: np.array
             Frequencies corresponding to magnitudes
-        mag: np.array
+        fft_mag: np.array
             Spectrum magnitude
     """
-    n         = len(signal[0])
-    noisy_fft = rfft(signal[1]**2)        # this method only works with positive amplitudes
-    freq      = rfftfreq(n, dt)
-    mag       = np.abs(noisy_fft) * 2 / n # multiply by two since we removed the second half of spectrum and energy must be conserved
-                                          # divide by n to normalize
-    return freq, mag
+    n  = len(y)                         # Get the signal length
+
+    fft_output = np.fft.rfft(y)         # Perform real fft
+    rfreqs     = np.fft.rfftfreq(n, dt) # Calculate frequency bins
+    fft_mag    = np.abs(fft_output)     # Take only magnitude of spectrum
+
+    # Normalize the amplitude by number of bins and multiply by 2
+    # because we removed second half of spectrum and energy must be preserved
+    fft_mag = fft_mag * 2 / n           
+
+    return rfreqs, fft_mag
+
+def smooth_fft(f, amp, delta=1):
+    """
+    Compute the L2 norm of the Fourier transform of a signal on specifics bandwidth
+
+    Parameters:
+    -----------
+        f: np.array
+            Frequencies array, which is left unmodified
+        amp: np.array
+            Array with frequencies amplitudes
+
+    Output:
+    -------
+        f: np.array
+            Same frequency array as the input
+        ampl: np.array
+            Smoothed out frequencies amplitudes
+    """
+    ampl = np.zeros((len(amp), 1))
+    for i in range(len(amp)):
+        if i > delta // 2 and i < (len(amp) - delta // 2):
+            if delta <= 1:
+                ampl[i] = amp[i]
+            else:
+                ampl[i] = LA.norm(amp[(i - delta // 2):(i + delta // 2)], 2) / np.sqrt(delta)
+        elif(i <= delta // 2):
+            ampl[i] = LA.norm(amp[:delta], 2) / np.sqrt(delta)
+        if (i >= len(amp) - delta // 2):
+            ampl[i] = LA.norm(amp[len(amp) - delta:len(amp)], 2) / np.sqrt(delta)
+    return f, ampl
 
 def get_freq_ampl(domain, values):
     """
@@ -44,10 +80,8 @@ def get_freq_ampl(domain, values):
         
     Output:
     -------
-        amplitude: float
-            Estimated amplitude of the signal with removed noise
-        frequency: float
-            Frequency with the most significance found
+        frequency: int
+            Index of the frequency with the most significance found
     """
     n = len(domain)
     a = np.zeros((n,), dtype=int)
@@ -73,15 +107,14 @@ def get_freq_ampl(domain, values):
             index_avg[i]  = max(np.where(values == min(values[:int(index_freq[i])]))[0])
             
         rel_ampls = values[index_freq] - values[index_avg] # relative amplitudes
-        amplitude = max(rel_ampls)                         # max of relative amplitudes; estimated amplitude of signal
         frequency = int(index_freq[np.argmax(rel_ampls)])  # most relevant frequency
         
     else:                                               
         raise Exception('No peaks detected in the data')
         
-    return amplitude, frequency
+    return frequency
 
-def get_hff(signal, dt):
+def get_hff(signal, delta = 1):
     """
     Estimates the frequency and amplitude of some data points using the High Frequency Features (HFF) detection method.
     Note: this procedure will only work when all the values in the signal are positive. Taking the absolute value of a signal with negative components
@@ -91,17 +124,21 @@ def get_hff(signal, dt):
     ------------
         signal: np.array
             Signal in the following format: [domain, values]
-        dt: int
-            Interval between each sampling point
+        delta: int
+            Function smoothing parameter
 
     Output:
     -------
-        amplitude: float
-            Estimated amplitude of the signal with removed noise
+        idx: int
+            Index of the most significant frequency
         frequency: float
             Frequency with the most significance found
     """
+    x = signal[0]    # get signal domain
+    y = signal[1]**2 # get signal data values squared
 
-    domain, mag = get_fft(np.array(signal), dt)
-    ampl, freq  = get_freq_ampl(domain, mag)
-    return ampl, freq
+    dt      = x[int(len(x) / 2)] - x[int(len(x) / 2 - 1)]
+    f, amp  = get_fft(y, dt)
+    f, amps = smooth_fft(f, amp, delta) 
+    idx     = get_freq_ampl(f, np.power(amps, 2))
+    return idx, f[idx]

@@ -1,7 +1,7 @@
 from create_data import create_data
 from get_freqs import get_freqs
 from autocorrelation import autocorrelation
-from hff import get_hff, get_fft
+from hff import get_hff, get_fft, smooth_fft
 from significance import get_significance
 import numpy as np
 import matplotlib.pyplot as plt
@@ -9,9 +9,9 @@ import matplotlib.pyplot as plt
 #############################
 # # # C O N S T A N T S # # #
 #############################
-total_time    = 1           # Generating signal
+total_time    = 3           # Generating signal
 time_interval = 0.001       # Generating signal
-m_phi         = 2 * np.pi   # Generating signal
+m_phi         = 5 * np.pi   # Generating signal
 m_e           = 1           # Generating signal
 g_gamma       = 1           # Generating signal
 g_e           = 1           # Generating signal
@@ -20,7 +20,7 @@ density       = 1           # Generating signal
 c             = 1           # Generating signal
 h_bar         = 1           # Generating signal
 mean          = 0           # Generating signal
-deviation     = 0.001       # Generating signal
+deviation     = 0.4         # Generating signal
 use_noise     = True        # Generating signal
 i             = 1           # Autocorrelation
 threshold     = 0.5         # Dft and psd
@@ -77,21 +77,22 @@ if method == 1:
     plt.show()
 
 elif method == 2:
-    ampl, freq = get_hff(signal, time_interval)
+    idx, freq = get_hff(np.array(signal))
 
     print(f'Estimated frequency: {freq}')   
 
-    dom, ran = get_fft(signal, time_interval) # get domain and range for FT used in HFF 
-
-    significance = get_significance(ran, freq)
-    print(f'Significance of frequency {freq}: {significance}')
+    f, amp   = get_fft(signal[1]**2, time_interval)
+    dom, ran = smooth_fft(f, amp) 
 
     fig, ax = plt.subplots(1)
     ax.plot(dom, ran)
-    ax.plot(freq, ran[freq], 'bD')            # plot blue square corresponding to most significant frequency peak
+    ax.plot(dom[idx], ran[idx], 'bD')            # plot blue square corresponding to most significant frequency peak
     ax.set_yscale('log')
     ax.set_xlabel('Freq')
     ax.set_ylabel('FT coefficient')
     ax.set_title("Detected frequencies with HFF")
+
+    # significance = get_significance(ran, idx)
+    # print(f'Significance of frequency {freq}: {significance}')
 
     plt.show()
