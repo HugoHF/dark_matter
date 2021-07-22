@@ -7,8 +7,9 @@ def create_data(total_time=1, time_interval=0.001, m_phi=1, m_e=1, g_gamma=1, g_
     domain     = np.arange(0, total_time, time_interval)
     num_points = len(domain)
 
+    omega = ((m_phi * (c**2)) / h_bar)
     if simple:
-        func = lambda t: A * np.cos(omega * np.pi * t)
+        func = lambda t: A * np.cos(omega * t)
     else:
         K     = np.sqrt((2 * density) / c**2)
         omega = ((m_phi * (c**2)) / h_bar)
