@@ -21,8 +21,8 @@ deviation     = 0.01
 for i in np.arange(f_start, f_end, f_inter):
     for j in np.arange(d_start, d_end, d_inter):
         signal       = create_data(m_phi = i * np.pi, density = j, use_noise=True, deviation=deviation, time_interval=time_interval, total_time=total_time)
-        ampl, freq   = get_hff(signal, time_interval) 
-        dom, ran     = get_fft(signal, time_interval)
-        significance = get_significance(ran, freq)
+        idx, freq    = get_hff(signal) 
+        dom, ran     = get_fft(signal[1] ** 2, time_interval)
+        significance = get_significance(ran, idx)
 
         print(f'Calculated significance of frequency {freq}: {significance}')
