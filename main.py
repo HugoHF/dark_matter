@@ -3,13 +3,14 @@ from get_freqs import get_freqs
 from autocorrelation import autocorrelation
 from hff import get_hff, get_fft, smooth_fft
 from significance import get_significance
+from chi_squared import get_prob
 import numpy as np
 import matplotlib.pyplot as plt
 
 #############################
 # # # C O N S T A N T S # # #
 #############################
-total_time    = 3           # Generating signal
+total_time    = 1           # Generating signal
 time_interval = 0.001       # Generating signal
 m_phi         = 5 * np.pi   # Generating signal
 m_e           = 1           # Generating signal
@@ -20,7 +21,7 @@ density       = 1           # Generating signal
 c             = 1           # Generating signal
 h_bar         = 1           # Generating signal
 mean          = 0           # Generating signal
-deviation     = 0.4         # Generating signal
+deviation     = 0.1         # Generating signal
 use_noise     = True        # Generating signal
 i             = 1           # Autocorrelation
 threshold     = 0.5         # Dft and psd
@@ -96,3 +97,5 @@ elif method == 2:
     # print(f'Significance of frequency {freq}: {significance}')
 
     plt.show()
+
+    get_prob(signal, idx)
