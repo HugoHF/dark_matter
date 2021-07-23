@@ -1,9 +1,9 @@
 import numpy as np
 from scipy.stats import chi2
 from scipy.special import binom
+from decimal import Decimal
 
-
-def get_significance(fourier, deviation):
+def get_significance(fourier):
 
     maximum = max(fourier)
     index_max = list(fourier).index(maximum)
@@ -19,7 +19,7 @@ def get_significance(fourier, deviation):
     fourier_conj = np.conj(fourier)
     fourier2 = [np.real(fourier[i]*fourier_conj[i]) for i in range(len(fourier))]
 
-    cdf_result = cdf_of_chi2(max(fourier2), deviation)
+    cdf_result = cdf_of_chi2(max(fourier2), std_total)
 
     #print("CDF", cdf_result, binom(len(fourier2),1)* cdf_result * ((1-cdf_result)**(len(fourier2) - 1)))
     '''

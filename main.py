@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 #############################
 total_time    = 1           # Generating signal
 time_interval = 0.001       # Generating signal
-m_phi         = 10 * np.pi   # Generating signal
+m_phi         = 10 * np.pi  # Generating signal
 m_e           = 1           # Generating signal
 g_gamma       = 1           # Generating signal
 g_e           = 1           # Generating signal
@@ -21,7 +21,7 @@ density       = 1           # Generating signal
 c             = 1           # Generating signal
 h_bar         = 1           # Generating signal
 mean          = 0           # Generating signal
-deviation     = 0.01         # Generating signal
+deviation     = 0.35       # Generating signal
 use_noise     = True        # Generating signal
 i             = 1           # Autocorrelation
 threshold     = 0.5         # Dft and psd
@@ -83,7 +83,8 @@ if method == 1:
     plt.title("fourier^2")
     plt.show()
 
-    significance = get_significance(fhat, deviation)
+    significance = get_significance(fhat)
+    print("SIGNIFICANCE", significance)
 
 elif method == 2:
     idx, freq = get_hff(np.array(signal))
