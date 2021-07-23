@@ -25,7 +25,7 @@ def get_significance(fourier, deviation):
     '''
     IS THIS CORRECT?
     '''
-    actual_probability = binom(len(fourier2),1)* cdf_result * ((1-cdf_result)**(len(fourier2) - 1)))
+    actual_probability = binom(len(fourier2),1)* cdf_result * ((1-cdf_result)**(len(fourier2) - 1))
 
     return cdf_result
 
