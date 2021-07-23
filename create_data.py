@@ -8,7 +8,9 @@ def create_data(total_time=1, time_interval=0.001, m_phi=1, m_e=1, g_gamma=1, g_
     num_points = len(domain)
 
     omega = ((m_phi * (c**2)) / h_bar)
-    if simple:
+    if m_phi == 0:
+        func = lambda t: 0.0
+    elif simple:
         func = lambda t: A * np.cos(omega * t)
     else:
         K     = np.sqrt((2 * density) / c**2)

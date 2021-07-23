@@ -22,7 +22,7 @@ def get_freqs(signal, threshold):
             Array with most significant frequencise found
     """
     _, signal = signal
-    
+
     n    = len(signal)
     fhat = fft(signal)                               # get noisy fast fourier transform
     psd  = fhat * np.conj(fhat) / n                  # get power spectrum density
@@ -33,4 +33,4 @@ def get_freqs(signal, threshold):
         if psd[i] >= threshold:                      # compare psd of each frequency against the threshold
             freqs.append(i)
 
-    return psd, np.array(freqs)
+    return fhat[:len(fhat)//2], psd, np.array(freqs)
