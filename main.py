@@ -83,11 +83,7 @@ if method == 1:
     plt.title("fourier^2")
     plt.show()
 
-    std = get_significance(fhat, deviation)
-    print(std/deviation)
-    domain     = np.arange(0, total_time, time_interval)
-    num_points = len(domain)
-    print(std/num_points)
+    significance = get_significance(fhat, deviation)
 
 elif method == 2:
     idx, freq = get_hff(np.array(signal))
