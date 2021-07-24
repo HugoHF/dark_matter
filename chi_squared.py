@@ -19,7 +19,10 @@ def get_prob(signal, idx, plot=False):
     dof = 2
     x   = (np.abs(peak_value) ** 2) / (avg_std ** 2)
     chi =  chi2.cdf(x, dof)
-    print(f"Prob: {chi}")
+    print(f"Individual prob: {chi}")
+
+    uncertainty = np.sqrt((chi * (1 - chi)) / len(transform))
+    print(f"Uncertainty: {uncertainty}")
 
     if plot:
         cdf_array=[]
@@ -33,4 +36,4 @@ def get_prob(signal, idx, plot=False):
         plt.plot(cdf_array)
         plt.show()
 
-    return chi
+    return chi, uncertainty
