@@ -13,9 +13,8 @@ def autocorrelation(signal, i=1):
 
         Always autocorrelates at least 1 time, even with i == 0 or i < 0.
     '''
-    
-    domain, signal = signal
 
+    domain, signal = signal
     h = 1
 
     def autocorrelate(signal, h):
@@ -27,4 +26,4 @@ def autocorrelation(signal, i=1):
 
     autocorrelated_signal, h  = autocorrelate(signal, h)
 
-    return np.array([domain, autocorrelated_signal])
+    return np.array([domain[1:], autocorrelated_signal[1:]])
