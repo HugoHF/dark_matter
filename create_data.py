@@ -7,7 +7,6 @@ def create_data(total_time=1, time_interval=0.001, m_phi=1, m_e=1, g_gamma=1, g_
     domain     = np.arange(0, total_time, time_interval)
     num_points = len(domain)
 
-    omega = ((m_phi * (c**2)) / h_bar)
     if m_phi == 0:
         func = lambda t: 0.0
     elif simple:

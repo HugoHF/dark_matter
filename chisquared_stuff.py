@@ -19,18 +19,14 @@ def get_significance(fourier):
     fourier_conj = np.conj(fourier)
     fourier2 = [np.real(fourier[i]*fourier_conj[i]) for i in range(len(fourier))]
 
-    cdf_result = cdf_of_chi2(max(fourier2), std_total)
+    cdf_result = cdf_of_chi2(max(fourier2), std_total**2)
 
-    #print("CDF", cdf_result, binom(len(fourier2),1)* cdf_result * ((1-cdf_result)**(len(fourier2) - 1)))
-    '''
-    IS THIS CORRECT?
-    '''
-    actual_probability = binom(len(fourier2),1)* cdf_result * ((1-cdf_result)**(len(fourier2) - 1))
 
-    return cdf_result
+    actual_probability =  ((cdf_result)**(len(fourier2)))
+    return actual_probability
 
 def cdf_of_chi2(peak_height, sdt_x):
     # sdt_x is (std(Re[Fourier]) + std(Im[Fourier]))/2
-    x = peak_height/(sdt_x**2)
+    x = peak_height/sdt_x
     return chi2.cdf(x, 2)
     # returns P("peak of height peak_height is not a statistical error")
