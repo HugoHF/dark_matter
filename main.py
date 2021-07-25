@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 #############################
 total_time    = 1           # Generating signal
 time_interval = 0.001       # Generating signal
-m_phi         = 10 * np.pi  # Generating signal
+m_phi         = 8 * np.pi  # Generating signal
 m_e           = 1           # Generating signal
 g_gamma       = 1           # Generating signal
 g_e           = 1           # Generating signal
@@ -84,7 +84,7 @@ if method == 1:
     plt.title("fourier^2")
     plt.show()
 
-    significance = get_significance(fhat)
+    significance = get_significance(fhat, freqs[0])
     print("SIGNIFICANCE", significance)
 
 elif method == 2:

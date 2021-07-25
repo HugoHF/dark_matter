@@ -5,7 +5,7 @@ from decimal import Decimal
 
 def get_significance(fourier, index_freq):
 
-    fourier_without_peak = np.delete(fourier, np.argwhere(fourier==fourier[freq]))
+    fourier_without_peak = np.delete(fourier, np.argwhere(fourier==fourier[index_freq]))
 
 
     real = np.real(fourier_without_peak)
@@ -16,7 +16,7 @@ def get_significance(fourier, index_freq):
     fourier_conj = np.conj(fourier)
     fourier2 = [np.real(fourier[i]*fourier_conj[i]) for i in range(len(fourier))]
 
-    cdf_result = cdf_of_chi2(fourier2[freq], std_total**2)
+    cdf_result = cdf_of_chi2(fourier2[index_freq], std_total**2)
 
 
     actual_probability =  cdf_result**(len(fourier2))

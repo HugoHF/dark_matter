@@ -1,11 +1,13 @@
 import numpy as np
 from hff import get_hff
+from get_freqs import get_freqs
 from create_data import create_data
+from chisquared_stuff import get_significance
 from chi_squared import get_prob
 import csv
 
 test_stds     = np.arange(0, 0.5, 0.01)
-test_freqs    = np.arange(1, 50, 0.5)
+test_freqs    = np.arange(2, 100, 0.5)
 time_interval = 0.001
 
 csv_freqs = []
@@ -20,12 +22,23 @@ for test_freq in test_freqs:
         print(f"{test_freq} with {std}")
         amp       = (3 * np.sqrt(2)) / (test_freq * np.pi)  # calculate amplitude of functin with default values
         signal    = create_data(m_phi=test_freq * np.pi, deviation=std, time_interval=time_interval)
-        try:
+
+        try:        
             idx, freq = get_hff(signal)
-            prob, unc = get_prob(signal, idx)
+            if idx % 2 == 0:
+                idx = idx // 2 # again, idk why this is but my guess is that it is because i take the real fft in hff
+                
+            fhat, _, _ = get_freqs(signal, 0.5)
+            prob       = get_significance(fhat, idx)
+            unc        = np.sqrt((prob * (1 - prob)) / len(fhat)) 
+
+            # Previous method
+            # prob, unc = get_prob(signal, idx)
+        
         except Exception:
             freq = -1
             prob = -1
+            unc  = -1
 
         csv_freqs.append(test_freq)
         csv_ampl.append(amp)
