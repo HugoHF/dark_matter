@@ -2,6 +2,7 @@ from create_data import create_data
 from get_freqs import get_freqs
 from autocorrelation import autocorrelation
 from hff import get_hff, get_fft, smooth_fft
+from chi_squared import get_prob
 # from significance import get_significance
 from chisquared_stuff import get_significance
 import numpy as np
@@ -21,7 +22,7 @@ density       = 1           # Generating signal
 c             = 1           # Generating signal
 h_bar         = 1           # Generating signal
 mean          = 0           # Generating signal
-deviation     = 0.35       # Generating signal
+deviation     = 0.01        # Generating signal
 use_noise     = True        # Generating signal
 i             = 1           # Autocorrelation
 threshold     = 0.5         # Dft and psd
@@ -106,3 +107,5 @@ elif method == 2:
     # print(f'Significance of frequency {freq}: {significance}')
 
     plt.show()
+    
+    get_prob(signal, idx)
