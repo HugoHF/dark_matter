@@ -1,9 +1,9 @@
 import json
-from main import methods as func
+from main import methods as func # PUT IN HERE THE CORRECT METHOD
 import matplotlib.pyplot as plt
 import numpy as np
 
-# np.seterr(all="ignore")
+np.seterr(all="ignore")
 
 with open('test_samples.json', "r") as file:
     testing_samples = json.load(file)

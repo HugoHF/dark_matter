@@ -53,7 +53,7 @@ def methods(sig):
 
         if __name__ == "__main__":
             fig, ax = plt.subplots(2,1)
-            ax[0].plot(np.arange(len(fhat)), fhat, label="Power spectrum density")
+            ax[0].plot(np.arange(len(fhat)), fhat, label="Fourier transform")
             ax[0].set_xlabel("Frequency")
             ax[0].set_ylabel("Magnitude")
 
@@ -111,10 +111,10 @@ if __name__ == "__main__":
     ##---------------------------##
     signal = create_data(total_time=total_time, time_interval=time_interval, m_phi=m_phi, m_e=m_e, g_gamma=g_gamma, g_e=g_e, alpha=alpha, density=density,
                         c=c, h_bar=h_bar, mean=mean, deviation=deviation, use_noise=use_noise)
-    print(methods(signal))
 
     plt.plot(signal[0], signal[1])
     plt.title("Raw signal")
     plt.ylabel("Energy")
     plt.xlabel("Time")
     plt.show()
+    print(methods(signal))
