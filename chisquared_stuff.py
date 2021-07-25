@@ -6,6 +6,8 @@ from decimal import Decimal
 def get_significance(fourier):
 
     maximum = max(fourier)
+    if "nan" in str(maximum):
+        return 0
     index_max = list(fourier).index(maximum)
 
     fourier_without_peak = np.delete(fourier, np.argwhere(fourier==maximum))
