@@ -25,15 +25,17 @@ def get_prob(signal, idx, plot=False):
     print(f"Uncertainty: {uncertainty}")
 
     if plot:
-        cdf_array=[]
+        cdf_array  = []
+        domain_arr = []
         
         for i in range(len(transform)): 
             temp_amp = transform[i]
-            temp     = np.abs(temp_amp) * 2 /avg_std
-            temp_cdf = chi2.cdf(temp,2)
+            temp     = (np.abs(temp_amp) ** 2) / (avg_std ** 2)
+            temp_cdf = chi2.cdf(temp, dof)
             cdf_array.append(temp_cdf)
+            domain_arr.append(i)
         
-        plt.plot(cdf_array)
+        plt.plot(domain_arr, cdf_array)
         plt.show()
 
     return chi, uncertainty

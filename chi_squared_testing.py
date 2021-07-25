@@ -11,5 +11,5 @@ for std in test_stds:
     signal    = create_data(m_phi=np.pi * ex_freq, deviation=std)
     idx, freq = get_hff(np.array(signal))
     print(f'Estimated frequency: {freq}') 
-    get_prob(signal, idx, plot=False)  
+    get_prob(signal, idx, plot=True)  
     print() # new line
