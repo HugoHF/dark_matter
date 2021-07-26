@@ -1,6 +1,6 @@
 import json
 
-from main import methods as func # PUT IN HERE THE CORRECT METHOD
+from main import method_2 as func # PUT IN HERE THE CORRECT METHOD
 
 from mpl_toolkits import mplot3d
 import matplotlib as mpl

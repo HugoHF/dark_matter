@@ -98,7 +98,7 @@ def method_2(sig):
 
     freqs_domain = fftfreq(len(sig[1]), time_interval)[:len(sig[1])//2]
     idx          = np.where(np.isclose(freqs_domain, freq / 2, atol=0.5))
-    fhat, _, _   = get_freqs(signal, 0.5)
+    fhat, _, _   = get_freqs(sig, 0.5)
     significance = get_significance(fhat, idx[0][0])
 
     # divide frequency by 2 since HFF squares the function before finding frequency
