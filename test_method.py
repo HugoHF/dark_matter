@@ -1,5 +1,5 @@
 import json
-from main import methods as func # PUT IN HERE THE CORRECT METHOD
+from main import method_1, method_2
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -19,7 +19,7 @@ for freq in signals.keys():
         resulting_freqs, errors = 0, 0
 
         for i in range(3):
-            resulting_freq, error = func(np.array([domain, signals[freq][stdev][str(i)]]))
+            resulting_freq, error = method_1(np.array([domain, signals[freq][stdev][str(i)]]))
             resulting_freqs += resulting_freq
             errors += error
 
