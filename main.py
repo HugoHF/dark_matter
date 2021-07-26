@@ -22,7 +22,7 @@ density       = 1           # Generating signal
 c             = 1           # Generating signal
 h_bar         = 1           # Generating signal
 mean          = 0           # Generating signal
-deviation     = 0.01        # Generating signal
+deviation     = 0.2        # Generating signal
 use_noise     = True        # Generating signal
 i             = 1           # Autocorrelation
 threshold     = 0.5         # Dft and psd
@@ -30,7 +30,7 @@ threshold     = 0.5         # Dft and psd
 ##---------------------------##
 ##------ CHOOSE METHOD ------##
 ##---------------------------##
-method = 1                  # Run method 1 or 2
+method = 2                  # Run method 1 or 2
                             # Method 1: Correlate noisy function and apply FT
                             # Method 2: High Frequency Features (HFF) detection method
 
@@ -88,12 +88,13 @@ if method == 1:
     print("SIGNIFICANCE", significance)
 
 elif method == 2:
-    idx, freq = get_hff(np.array(signal))
+    delta     = 1 # smoothing parameter, it may be worth making this bigger with higher deviation
+    idx, freq = get_hff(np.array(signal), delta=delta)
 
     print(f'Estimated frequency: {freq}')
 
     f, amp   = get_fft(signal[1]**2, time_interval)
-    dom, ran = smooth_fft(f, amp)
+    dom, ran = smooth_fft(f, amp, delta=delta)
 
     fig, ax = plt.subplots(1)
     ax.plot(dom, ran)
