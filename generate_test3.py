@@ -49,7 +49,7 @@ for test_freq in test_freqs:
         csv_prob.append(prob)
         csv_unc.append(unc)
 
-with open('general_tests.csv', mode='w') as test_results:
+with open('general_tests_cross_correlation.csv', mode='w') as test_results:
     writer = csv.writer(test_results, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 
     writer.writerow(['Real frequency', 'Amplitude', 'Error deviation', 'Detected frequency', 'Chi2 prob', 'Uncertainty'])
