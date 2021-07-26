@@ -1,9 +1,9 @@
 import numpy as np
-from ipynb.fs.full.hff import get_hff
-from ipynb.fs.full.get_freqs import get_freqs
-from ipynb.fs.full.create_data import create_data
-from ipynb.fs.full.chisquared_stuff import get_significance
-from ipynb.fs.full.chi_squared import get_prob
+from hff import get_hff
+from get_freqs import get_freqs
+from create_data import create_data
+from chisquared_stuff import get_significance
+from chi_squared import get_prob
 import csv
 from scipy import signal
 test_stds     = np.arange(0, 0.5, 0.01)
