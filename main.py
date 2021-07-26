@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 #############################
 total_time    = 1           # Generating signal
 time_interval = 0.001       # Generating signal
-m_phi         = 8 * np.pi  # Generating signal
+m_phi         = 10 * np.pi  # Generating signal
 m_e           = 1           # Generating signal
 g_gamma       = 1           # Generating signal
 g_e           = 1           # Generating signal
@@ -22,7 +22,7 @@ density       = 1           # Generating signal
 c             = 1           # Generating signal
 h_bar         = 1           # Generating signal
 mean          = 0           # Generating signal
-deviation     = 0.2        # Generating signal
+deviation     = 0.05        # Generating signal
 use_noise     = True        # Generating signal
 i             = 1           # Autocorrelation
 threshold     = 0.5         # Dft and psd
@@ -41,7 +41,7 @@ signal = create_data(total_time=total_time, time_interval=time_interval, m_phi=m
                     c=c, h_bar=h_bar, mean=mean, deviation=deviation, use_noise=use_noise)
 
 plt.plot(signal[0], signal[1])
-plt.title("Raw signal")
+plt.title(f"Raw signal. Error deviation: {deviation}")
 plt.ylabel("Energy")
 plt.xlabel("Time")
 plt.show()
@@ -88,25 +88,46 @@ if method == 1:
     print("SIGNIFICANCE", significance)
 
 elif method == 2:
-    delta     = 1 # smoothing parameter, it may be worth making this bigger with higher deviation
+    delta     = 2 # smoothing parameter, it may be worth making this bigger with higher deviation
     idx, freq = get_hff(np.array(signal), delta=delta)
 
     print(f'Estimated frequency: {freq}')
 
     f, amp   = get_fft(signal[1]**2, time_interval)
+
+    fig, ax = plt.subplots(1)
+    ax.plot(f, amp)
+    ax.set_yscale('log')
+    ax.set_ylabel('Coefficient')
+    ax.set_xlabel('Frequencies')
+    ax.set_title("Fourier transform of signal")
+
+    plt.show()
+
     dom, ran = smooth_fft(f, amp, delta=delta)
+
+    fig, ax = plt.subplots(1)
+    ax.plot(dom, ran)
+    ax.set_yscale('log')
+    ax.set_ylabel('Coefficient')
+    ax.set_xlabel('Frequencies')
+    ax.set_title(rf"Smoothed Fourier transform of signal with $\delta={delta}$")
+
+    plt.show()
 
     fig, ax = plt.subplots(1)
     ax.plot(dom, ran)
     ax.plot(dom[idx], ran[idx], 'bD')            # plot blue square corresponding to most significant frequency peak
     ax.set_yscale('log')
-    ax.set_xlabel('Freq')
-    ax.set_ylabel('FT coefficient')
+    ax.set_xlabel('Frequencies')
+    ax.set_ylabel('Coefficient')
     ax.set_title("Detected frequencies with HFF")
 
-    # significance = get_significance(ran, idx)
-    # print(f'Significance of frequency {freq}: {significance}')
-
     plt.show()
+
+    # significance = get_significance(ran, idx, plot=True)
+    # print(f'Significance of frequency {freq}: {significance}')
     
-    get_prob(signal, idx)
+    if idx % 2 == 0:
+        idx = idx // 2
+    get_prob(signal, idx, plot=True)

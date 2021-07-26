@@ -28,7 +28,7 @@ def get_prob(signal, idx, plot=False):
         cdf_array  = []
         domain_arr = []
         
-        for i in range(len(transform)): 
+        for i in range(len(transform[:len(transform)//2])): 
             temp_amp = transform[i]
             temp     = (np.abs(temp_amp) ** 2) / (avg_std ** 2)
             temp_cdf = chi2.cdf(temp, dof)
@@ -36,6 +36,9 @@ def get_prob(signal, idx, plot=False):
             domain_arr.append(i)
         
         plt.plot(domain_arr, cdf_array)
+        plt.xlabel('Frequency')
+        plt.ylabel('Significance')
+        plt.title(r'Chi$^2$ function')
         plt.show()
 
     return chi, uncertainty
