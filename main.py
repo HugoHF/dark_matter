@@ -6,13 +6,14 @@ from hff import get_hff, get_fft, smooth_fft
 from chisquared_stuff import get_significance
 import numpy as np
 import matplotlib.pyplot as plt
+from scipy.fft import fftfreq
 
 #############################
 # # # C O N S T A N T S # # #
 #############################
 total_time    = 1           # Generating signal
 time_interval = 0.001       # Generating signal
-m_phi         = 10 * np.pi  # Generating signal
+m_phi         = 9 * np.pi  # Generating signal
 m_e           = 1           # Generating signal
 g_gamma       = 1           # Generating signal
 g_e           = 1           # Generating signal
@@ -21,7 +22,7 @@ density       = 1           # Generating signal
 c             = 1           # Generating signal
 h_bar         = 1           # Generating signal
 mean          = 0           # Generating signal
-deviation     = 0.35       # Generating signal
+deviation     = 0.01        # Generating signal
 use_noise     = True        # Generating signal
 i             = 1           # Autocorrelation
 threshold     = 0.5         # Dft and psd
@@ -29,81 +30,79 @@ threshold     = 0.5         # Dft and psd
 ##---------------------------##
 ##------ CHOOSE METHOD ------##
 ##---------------------------##
-method = 1                  # Run method 1 or 2
-                            # Method 1: Correlate noisy function and apply FT
-                            # Method 2: High Frequency Features (HFF) detection method
-def methods(sig):
-    if method == 1:
-        ##----------------------------##
-        ##---- AUTOCORRELATING IT ----##
-        ##----------------------------##
-        autocorrelated_signal = autocorrelation(sig, i=i)
+# Run method 1 or 2
+# Method 1: Correlate noisy function and apply FT
+# Method 2: High Frequency Features (HFF) detection method
 
-        if __name__ == "__main__":
-            plt.plot(autocorrelated_signal[0], autocorrelated_signal[1])
-            plt.title("Signal after autocorrelation")
-            plt.ylabel("Correlation")
-            plt.xlabel("Shift amount [t]")
-            plt.show()
+def method_1(sig):
+    ##----------------------------##
+    ##---- AUTOCORRELATING IT ----##
+    ##----------------------------##
+    autocorrelated_signal = autocorrelation(sig, i=i)
 
-        ##---------------------------##
-        ##---- FOURIER TRANSFORM ----##
-        ##---------------------------##
-        fhat, psd, freqs = get_freqs(autocorrelated_signal, threshold)
+    if __name__ == "__main__":
+        plt.plot(autocorrelated_signal[0], autocorrelated_signal[1])
+        plt.title("Signal after autocorrelation")
+        plt.ylabel("Correlation")
+        plt.xlabel("Shift amount [t]")
+        plt.show()
 
-        if __name__ == "__main__":
-            fig, ax = plt.subplots(2,1)
-            ax[0].plot(np.arange(len(fhat)), fhat, label="Fourier transform")
-            ax[0].set_xlabel("Frequency")
-            ax[0].set_ylabel("Magnitude")
+    ##---------------------------##
+    ##---- FOURIER TRANSFORM ----##
+    ##---------------------------##
+    fhat, psd, freqs = get_freqs(autocorrelated_signal, threshold)
 
-            ax[1].scatter(freqs, np.ones(len(freqs)), label="peaks")
-            ax[1].set_xlabel("Frequency")
+    if __name__ == "__main__":
+        fig, ax = plt.subplots(2,1)
+        ax[0].plot(np.arange(len(fhat)), fhat, label="Fourier transform")
+        ax[0].set_xlabel("Frequency")
+        ax[0].set_ylabel("Magnitude")
 
-            ax[0].legend()
-            ax[1].legend()
-            ax[0].set_title("Dft results")
+        ax[1].scatter(freqs, np.ones(len(freqs)), label="peaks")
+        ax[1].set_xlabel("Frequency")
 
-            plt.show()
+        ax[0].legend()
+        ax[1].legend()
+        ax[0].set_title("Dft results")
 
-        fourier_conj = np.conj(fhat)
-        fourier2 = [np.real(fhat[i]*fourier_conj[i]) for i in range(len(fhat))]
+        plt.show()
 
-        if __name__ == "__main__":
-            plt.plot(np.arange(len(fourier2)), fourier2)
-            plt.title("fourier^2")
-            plt.show()
+    fourier_conj = np.conj(fhat)
+    fourier2 = [np.real(fhat[i]*fourier_conj[i]) for i in range(len(fhat))]
 
-        significance = get_significance(fhat)
-        f = np.abs(max(fhat))
+    if __name__ == "__main__":
+        plt.plot(np.arange(len(fourier2)), fourier2)
+        plt.title("fourier^2")
+        plt.show()
 
-    elif method == 2:
-        idx, freq = get_hff(np.array(sig))
-
-        print(f'Estimated frequency: {freq}')
-
-        f, amp   = get_fft(sig[1]**2, time_interval)
-        dom, ran = smooth_fft(f, amp)
-
-        if __name__ == "__main__":
-            fig, ax = plt.subplots(1)
-            ax.plot(dom, ran)
-            ax.plot(dom[idx], ran[idx], 'bD')            # plot blue square corresponding to most significant frequency peak
-            ax.set_yscale('log')
-            ax.set_xlabel('Freq')
-            ax.set_ylabel('FT coefficient')
-            ax.set_title("Detected frequencies with HFF")
-            plt.show()
-
-
-        # significance = get_significance(ran, idx)
-        # print(f'Significance of frequency {freq}: {significance}')
-
-        significance = 0
-        ### FILL IN THE CORRECT GRAPH. get_fft doesnt return the ft yet and I
-        ### didnt want to mess up
+    f = np.argmax(fhat)
+    significance = get_significance(fhat, f)
 
     return f, significance
+
+def method_2(sig):
+    idx, freq = get_hff(np.array(sig))
+    f, amp    = get_fft(sig[1]**2, time_interval)
+    dom, ran  = smooth_fft(f, amp)
+
+    # plot smoothed out ft
+    if __name__ == "__main__":
+        fig, ax = plt.subplots(1)
+        ax.plot(dom, ran)
+        ax.plot(dom[idx], ran[idx], 'bD')            # plot blue square corresponding to most significant frequency peak
+        ax.set_yscale('log')
+        ax.set_xlabel('Freq')
+        ax.set_ylabel('FT coefficient')
+        ax.set_title("Detected frequencies with HFF")
+        plt.show()
+
+    freqs_domain = fftfreq(len(sig[1]), time_interval)[:len(sig[1])//2]
+    idx          = np.where(np.isclose(freqs_domain, freq / 2, atol=0.5))
+    fhat, _, _   = get_freqs(signal, 0.5)
+    significance = get_significance(fhat, idx[0][0])
+
+    # divide frequency by 2 since HFF squares the function before finding frequency
+    return freq / 2, significance
 
 if __name__ == "__main__":
     ##---------------------------##
@@ -117,4 +116,5 @@ if __name__ == "__main__":
     plt.ylabel("Energy")
     plt.xlabel("Time")
     plt.show()
-    print(methods(signal))
+    #print(method_1(signal))
+    print(method_2(signal))
