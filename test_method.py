@@ -1,6 +1,6 @@
 import json
 
-from main import method_2 as func # PUT IN HERE THE CORRECT METHOD
+from main import method_3 as func # PUT IN HERE THE CORRECT METHOD
 
 from mpl_toolkits import mplot3d
 import matplotlib as mpl
@@ -26,8 +26,11 @@ for freq in signals.keys():
 
         for i in range(3):
             resulting_freq, error = func(np.array([domain, signals[freq][stdev][str(i)]]))
-            resulting_freqs += resulting_freq
-            errors += error
+            try:
+                resulting_freqs += resulting_freq
+                errors += error
+            except TypeError:
+                resulting_freqs = -100
 
         results["freqs"][freq][stdev], results["errors"][freq][stdev] = resulting_freqs/3, errors/3
 

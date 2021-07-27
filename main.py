@@ -82,6 +82,8 @@ def method_1(sig):
 
 def method_2(sig):
     idx, freq = get_hff(np.array(sig))
+    if "nan" in str(idx):
+        return idx, idx
     f, amp    = get_fft(sig[1]**2, time_interval)
     dom, ran  = smooth_fft(f, amp)
 
@@ -99,10 +101,21 @@ def method_2(sig):
     freqs_domain = fftfreq(len(sig[1]), time_interval)[:len(sig[1])//2]
     idx          = np.where(np.isclose(freqs_domain, freq / 2, atol=0.5))
     fhat, _, _   = get_freqs(sig, 0.5)
-    significance = get_significance(fhat, idx[0][0])
+    try:
+        significance = get_significance(fhat, idx[0][0])
+    except IndexError:
+        significance = 0
 
     # divide frequency by 2 since HFF squares the function before finding frequency
     return freq / 2, significance
+
+def method_3(sig):
+    ##----------------------------##
+    ##---- AUTOCORRELATING IT ----##
+    ##----------------------------##
+    autocorrelated_signal = autocorrelation(sig, i=1)
+
+    return method_2(np.array(autocorrelated_signal))
 
 if __name__ == "__main__":
     ##---------------------------##

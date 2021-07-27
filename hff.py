@@ -23,6 +23,10 @@ def get_fft(y, dt):
         fft_mag: np.array
             Spectrum magnitude
     """
+    for item in y:
+        if "nan" in str(item):
+            return item, item
+
     n  = len(y)                         # Get the signal length
 
     fft_output = np.fft.rfft(y)         # Perform real fft
@@ -31,7 +35,7 @@ def get_fft(y, dt):
 
     # Normalize the amplitude by number of bins and multiply by 2
     # because we removed second half of spectrum and energy must be preserved
-    fft_mag = fft_mag * 2 / n           
+    fft_mag = fft_mag * 2 / n
 
     return rfreqs, fft_mag
 
@@ -70,14 +74,14 @@ def get_freq_ampl(domain, values):
     """
     Numerical procedure to get estimated amplitude of the data points and the most signficant frequency.
     The data passed into this function should have already go through a FT.
-    
+
     Parameters:
     -----------
         domain: np.array
             Domain of the data to plot
         values: np.array
             Value for each point in domain
-        
+
     Output:
     -------
         frequency: int
@@ -86,7 +90,7 @@ def get_freq_ampl(domain, values):
     n = len(domain)
     a = np.zeros((n,), dtype=int)
     b = np.zeros((n,), dtype=int)
-    
+
     sorted_vals = values.copy() # create copy of unsorted data points
     sorted_vals.sort()          # sort the data points
 
@@ -94,24 +98,24 @@ def get_freq_ampl(domain, values):
         a[i]  = np.where(values <= sorted_vals[i])[0][0]      # smallest index where values <= sorted_vals
         after = values[int(a[i]):]                            # slice values after the index above
         b[i]  = len(after) - np.argmax(after[::-1]) -1 + a[i] # index of the peak after index a[i]
-    
+
     peaks   = np.unique(b)[1::] # indeces of all detected peaks, ommiting first peak from FT
     n_peaks = len(peaks)
-    
+
     if n_peaks > 0:                                 # if peaks were detected
         index_freq = np.zeros((n_peaks,),dtype=int) # most relevant frequency/peak
         index_avg  = np.zeros((n_peaks,),dtype=int) # initialization min between trend and peak
-        
+
         for i in range(n_peaks):
             index_freq[i] = peaks[i]
             index_avg[i]  = max(np.where(values == min(values[:int(index_freq[i])]))[0])
-            
+
         rel_ampls = values[index_freq] - values[index_avg] # relative amplitudes
         frequency = int(index_freq[np.argmax(rel_ampls)])  # most relevant frequency
-        
-    else:                                               
+
+    else:
         raise Exception('No peaks detected in the data')
-        
+
     return frequency
 
 def get_hff(signal, delta = 1):
@@ -139,6 +143,8 @@ def get_hff(signal, delta = 1):
 
     dt      = x[int(len(x) / 2)] - x[int(len(x) / 2 - 1)]
     f, amp  = get_fft(y, dt)
-    f, amps = smooth_fft(f, amp, delta) 
+    if "nan" in str(f):
+        return "nan", "nan"
+    f, amps = smooth_fft(f, amp, delta)
     idx     = get_freq_ampl(f, np.power(amps, 2))
     return idx, f[idx]
