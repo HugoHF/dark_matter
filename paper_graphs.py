@@ -3,6 +3,7 @@ from hff import get_hff
 from get_freqs import get_freqs
 from create_data import create_data
 from chisquared_stuff import get_significance
+from autocorrelation import autocorrelation
 import matplotlib.pyplot as plt
 from scipy.fft import fftfreq
 
@@ -23,6 +24,7 @@ significance   = [significance_1, significance_2, significance_3]
 for idx, test_freq in enumerate(test_freqs):
     for idx2, std in enumerate(test_stds):
         sig          = create_data(m_phi=test_freq * np.pi, deviation=std, time_interval=time_interval)
+        # sig          = autocorrelation(sig, i=1) # uncomment this to do autocorrelation plus HFF
         idx, freq    = get_hff(sig)
         freqs_domain = fftfreq(len(sig[1]), time_interval)[:len(sig[1])//2]
         idx          = np.where(np.isclose(freqs_domain, freq / 2, atol=0.5))

@@ -26,4 +26,4 @@ def autocorrelation(signal, i=1):
 
     autocorrelated_signal, h  = autocorrelate(signal, h)
 
-    return np.array([domain[1:], autocorrelated_signal[1:]])
+    return np.array([domain[0:], autocorrelated_signal[0:]])
