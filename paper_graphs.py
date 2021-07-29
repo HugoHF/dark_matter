@@ -42,11 +42,13 @@ for j in range(3):
     ax[0, j].set_title(fr"Detected frequencies with $\sigma={test_stds[j]}$")
     ax[0, j].set_xlabel('Frequency of clean signal')
     ax[0, j].set_ylabel('Frequency detected with HFF')
+    ax[0, j].set_ylim([0, 501])
 
 for j in range(3):
     ax[1, j].plot(test_freqs, significance[j])
     ax[1, j].set_title(fr"Confidence of detected frequencies with $\sigma={test_stds[j]}$")
     ax[1, j].set_xlabel('Frequency of clean signal')
     ax[1, j].set_ylabel('Confidence of signal detected with HFF')
+    ax[1, j].set_ylim([-0.1, 1.1])
 
 plt.show()
