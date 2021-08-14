@@ -121,6 +121,7 @@ def method_3(sig):
 
 if __name__ == "__main__":
     data, _ = data_into_signal("data.dat","no_file")
+    print(data)
     ##---------------------------##
     ##---- GENERATING SIGNAL ----##
     ##---------------------------##
