@@ -7,6 +7,7 @@ from chisquared_stuff import get_significance
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.fft import fftfreq
+from turn_data_into_signal import data_into_signal
 
 #############################
 # # # C O N S T A N T S # # #
@@ -22,7 +23,7 @@ density       = 1           # Generating signal
 c             = 1           # Generating signal
 h_bar         = 1           # Generating signal
 mean          = 0           # Generating signal
-deviation     = 0.01        # Generating signal
+deviation     = 10        # Generating signal
 use_noise     = True        # Generating signal
 i             = 1           # Autocorrelation
 threshold     = 0.5         # Dft and psd
@@ -38,7 +39,7 @@ def method_1(sig):
     ##----------------------------##
     ##---- AUTOCORRELATING IT ----##
     ##----------------------------##
-    autocorrelated_signal = autocorrelation(sig, i=i)
+    autocorrelated_signal = autocorrelation(sig, i=2)
 
     if __name__ == "__main__":
         plt.plot(autocorrelated_signal[0], autocorrelated_signal[1])
@@ -46,6 +47,7 @@ def method_1(sig):
         plt.ylabel("Correlation")
         plt.xlabel("Shift amount [t]")
         plt.show()
+        print([str(x) for x in autocorrelated_signal[1]])
 
     ##---------------------------##
     ##---- FOURIER TRANSFORM ----##
@@ -113,21 +115,22 @@ def method_3(sig):
     ##----------------------------##
     ##---- AUTOCORRELATING IT ----##
     ##----------------------------##
-    autocorrelated_signal = autocorrelation(sig, i=1)
+    autocorrelated_signal = autocorrelation(sig, i=6)
 
     return method_2(np.array(autocorrelated_signal))
 
 if __name__ == "__main__":
+    data, _ = data_into_signal("data.dat","no_file")
     ##---------------------------##
     ##---- GENERATING SIGNAL ----##
     ##---------------------------##
-    signal = create_data(total_time=total_time, time_interval=time_interval, m_phi=m_phi, m_e=m_e, g_gamma=g_gamma, g_e=g_e, alpha=alpha, density=density,
-                        c=c, h_bar=h_bar, mean=mean, deviation=deviation, use_noise=use_noise)
-
+    # signal = create_data(total_time=total_time, time_interval=time_interval, m_phi=m_phi, m_e=m_e, g_gamma=g_gamma, g_e=g_e, alpha=alpha, density=density,
+                        # c=c, h_bar=h_bar, mean=mean, deviation=deviation, use_noise=use_noise)
+    signal = create_data(simple=True, omega=10, deviation=3)
     plt.plot(signal[0], signal[1])
     plt.title("Raw signal")
     plt.ylabel("Energy")
     plt.xlabel("Time")
     plt.show()
     #print(method_1(signal))
-    print(method_2(signal))
+    print(method_1(signal))

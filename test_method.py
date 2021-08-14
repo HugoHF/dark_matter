@@ -7,7 +7,7 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
 
-np.seterr(all="ignore")
+# np.seterr(all="ignore")
 
 X, Y = [], []
 
